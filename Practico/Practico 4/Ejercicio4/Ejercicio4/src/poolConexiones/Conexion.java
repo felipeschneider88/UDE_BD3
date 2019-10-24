@@ -14,7 +14,7 @@ import com.mysql.jdbc.*;
 public class Conexion implements IConexion {
 	Connection myCon = null;
 	
-	public Conexion(int tranLevel, String driver, String usuario, String clave) 
+	public Conexion(int tranLevel, String driver, String url, String usuario, String clave) 
 			throws ClassNotFoundException, SQLException{
 		Class.forName(driver);
 		myCon = (Connection) DriverManager.getConnection(url,usuario,clave);
