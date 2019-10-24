@@ -14,8 +14,8 @@ public class PoolConexiones {
 	private ArrayList<Connection> conexiones;
 
 	public PoolConexiones() {
-		Conexiones = new ArrayList<Connection>();
-		tope = Conexiones.size();
+		conexiones = new ArrayList<Connection>();
+		tope = conexiones.size();
 		creadas=0;
 		
 		Properties p = new Properties();
