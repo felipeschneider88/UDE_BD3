@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="Practico 2/Ejercicio1/|Practico 2/Ejercicio2/CrearBDEscuela/src/|Practico 4/Ejercicio4/Ejercicio4/src/|Practico 3/E1/src/DBMS/|otros/controlacceso/ControlAcceso/src/|Practico 3/E1/src/" kind="src" path="Practico"/>
+	<classpathentry kind="src" path="Practico/otros/controlacceso/ControlAcceso/src"/>
+	<classpathentry kind="src" path="Practico/Practico 2/Ejercicio1"/>
+	<classpathentry kind="src" path="Practico/Practico 2/Ejercicio2/CrearBDEscuela/src"/>
+	<classpathentry excluding="DBMS/" kind="src" path="Practico/Practico 3/E1/src"/>
+	<classpathentry kind="src" path="Practico/Practico 3/E1/src/DBMS"/>
+	<classpathentry kind="src" path="Practico/Practico 4/Ejercicio4/Ejercicio4/src"/>
+	<classpathentry kind="lib" path="C:/Users/191batistama/Desktop/mysql-connector-java-5.1.21-bin.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
