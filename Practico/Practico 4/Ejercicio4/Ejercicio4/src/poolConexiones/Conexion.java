@@ -1,12 +1,7 @@
 package poolConexiones;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
-
 import com.mysql.jdbc.*;
 
 
@@ -24,6 +19,15 @@ public class Conexion implements IConexion {
 	public Connection getConnection() {
 		return myCon;
 	}
+	
+	//metodo a llamar antes de hacer Conexion con = null
+	public void cerrarConexion() throws SQLException{
+		if (myCon != null) {
+			myCon.close();
+			myCon = null;
+		}
+	}
+	
 	
 
 }
