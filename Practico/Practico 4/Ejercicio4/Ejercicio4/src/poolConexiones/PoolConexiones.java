@@ -55,11 +55,13 @@ public class PoolConexiones implements IPoolConexiones{
 		tamano = new Integer(p.getProperty("tamano"));
 		//TODO: Ver si esto anda o hay que averiguar los valores de Integer
 		nivelTransaccional = new Integer(p.getProperty("nivelTransaccional"));
-		//Connection.TRANSACTION_NONE 
-		//Connection.TRANSACTION_READ_COMMITTED
-		//Connection.TRANSACTION_READ_UNCOMMITTED
-		//Connection.TRANSACTION_REPEATABLE_READ
-		//Connection.TRANSACTION_SERIALIZABLE
+		/*
+		 * El nivel de transaccion none: 0
+		 * El nivel de transaccion READ_UNCOMMITTED: 1
+		 * El nivel de transaccion READ_COMMITTED: 2
+		 * El nivel de transaccion REPEATABLE_READ: 4
+		 * El nivel de transaccion SERIALIZABLE: 8
+		 */
 	}
 	public int getTope() {
 		return tope;

@@ -14,6 +14,13 @@ public class Conexion implements IConexion {
 		Class.forName(driver);
 		myCon = (Connection) DriverManager.getConnection(url,usuario,clave);
 		myCon.setTransactionIsolation(tranLevel);
+		/*
+		System.out.println("El nivel de transaccion none: "+ myCon.TRANSACTION_NONE);
+		System.out.println("El nivel de transaccion READ_UNCOMMITTED: "+ myCon.TRANSACTION_READ_UNCOMMITTED);
+		System.out.println("El nivel de transaccion READ_COMMITTED: "+ myCon.TRANSACTION_READ_COMMITTED);
+		System.out.println("El nivel de transaccion REPEATABLE_READ: "+ myCon.TRANSACTION_REPEATABLE_READ);
+		System.out.println("El nivel de transaccion SERIALIZABLE: "+ myCon.TRANSACTION_SERIALIZABLE);
+		*/
 	}
 	
 	public Connection getConnection() {
