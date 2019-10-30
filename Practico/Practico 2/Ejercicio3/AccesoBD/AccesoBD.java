@@ -22,7 +22,7 @@ public class AccesoBD {
 		{ 
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
 			pstmt1.setInt(1, nroTemp); 
 			ResultSet rs = pstmt1.executeQuery(); 
 			if(rs.next()) 
@@ -48,7 +48,7 @@ public class AccesoBD {
 		{ 
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
 			pstmt1.setInt(1, nroDrag); 
 			ResultSet rs = pstmt1.executeQuery(); 
 			if(rs.next()) 
@@ -72,7 +72,7 @@ public class AccesoBD {
 		{ 
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
 			pstmt1.setInt(1, nroTemp);
 			pstmt1.setInt(2, anio);
 			pstmt1.setInt(3, cantCapitulos);
@@ -95,7 +95,7 @@ public class AccesoBD {
 		{ 
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
 			pstmt1.setInt(1, nroTemp);
 			pstmt1.setString(2, nombre);
 			ResultSet rs = pstmt1.executeQuery(); 
@@ -122,7 +122,7 @@ public class AccesoBD {
 			
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
 			
 			ResultSet rs = pstmt1.executeQuery(); 
 			
@@ -155,8 +155,41 @@ public class AccesoBD {
 	//DEVUELVE LISTADO DE DE TODAS LAS DRAGQUEENS DE UNA TEMPORADA
 	public List<VODragQueen> listarDragQueens(Conexion con, int nroTemp) throws PersistenciaException {
 		
-		//TODO: PARA RESOLVER
-		return null;
+		try
+		{ 
+			List<VODragQueen> listaDrags = new ArrayList<VODragQueen>();
+			VODragQueen VOD;
+			
+			Consultas consultas= new Consultas(); 
+			String query= consultas.existeTemp(); 
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
+			pstmt1.setInt(1, nroTemp);
+			
+			ResultSet rs = pstmt1.executeQuery(); 
+			
+			while(rs.next()) {
+				int nroPart = 0;
+				String nombre = "";
+				int cantVictorias = 0;
+				
+				nroPart = rs.getInt("nroPart");
+				nombre = rs.getString("nombre");
+				cantVictorias = rs.getInt("cantVictorias");
+				
+				VOD = new VODragQueen(nroPart, nombre, cantVictorias, nroTemp);
+				
+				listaDrags.add(VOD);
+			}
+			
+			rs.close();  
+			pstmt1.close();
+	
+			return listaDrags;
+					
+		} catch(SQLException e) 
+		{
+			throw new PersistenciaException();
+		}
 	}
 	
 	//DEVUELVE LA TEMPORADA CON MAS PARTICIPANTES Y NUMERO CORRESPONDIENTE DE PARTICIPANTES, EN CASO DE EXISTIR DOS IGUALES DEVUELVE LA TEMP. DE NUMERO MAS ALTA
@@ -167,7 +200,7 @@ public class AccesoBD {
 			VOTemporada VOT;
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement)con.prepareStatement(query);
 			
 			ResultSet rs = pstmt1.executeQuery(); 
 			
@@ -202,7 +235,7 @@ public class AccesoBD {
 		{ 
 			Consultas consultas= new Consultas(); 
 			String query= consultas.existeTemp();
-			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt1 = (PreparedStatement) con.prepareStatement(query);
 			pstmt1.setInt(1, nroTemp);
 			pstmt1.setInt(2, nroPart);
 			ResultSet rs = pstmt1.executeQuery(); 
