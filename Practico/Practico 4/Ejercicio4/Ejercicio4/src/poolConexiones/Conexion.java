@@ -21,8 +21,12 @@ public class Conexion implements IConexion {
 	}
 	
 	//metodo a llamar antes de hacer Conexion con = null
-	public void cerrarConexion() throws SQLException{
+	public void cerrarConexion(boolean huboModificaciones) throws SQLException{
 		if (myCon != null) {
+			if (huboModificaciones)
+				myCon.commit();
+			else
+				myCon.rollback();
 			myCon.close();
 			myCon = null;
 		}

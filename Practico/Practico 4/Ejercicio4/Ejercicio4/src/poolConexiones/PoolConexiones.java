@@ -21,6 +21,7 @@ public class PoolConexiones implements IPoolConexiones{
 	private String url;
 	private ArrayList<IConexion> conexiones;
 	private static PoolConexiones instance;
+	private Monitor miMonitor;
 
 	
 	public static PoolConexiones getInstance() throws FileNotFoundException, IOException {
@@ -34,6 +35,7 @@ public class PoolConexiones implements IPoolConexiones{
 		conexiones = new ArrayList<IConexion>();
 		tope = conexiones.size();
 		creadas=0;
+		miMonitor = new Monitor();
 		
 		Properties p = new Properties();
 		System.out.println("Working Directory = " +
@@ -56,47 +58,65 @@ public class PoolConexiones implements IPoolConexiones{
 		return tope;
 	}
 	
-	private void addConexion() {
+	private int addConexion() throws ClassNotFoundException, SQLException {
+		int resu = -1;
 		if (tope < tamano) {
 			Conexion newCon;
-			try {
-				newCon = new Conexion(this.nivelTransaccional, this.driver, this.url, this.usuario, this.clave);
-				conexiones.add(newCon);
-				tope = tope + 1;
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			newCon = new Conexion(this.nivelTransaccional, this.driver, this.url, this.usuario, this.clave);
+			conexiones.add(newCon);
+			tope = tope + 1;		
+			resu = conexiones.indexOf(newCon);
 		}
+		return resu;
 	}
 	
-	private void removeConexion(IConexion con) {
+	public IConexion obtenerConexion (boolean modificada) throws PoolConexionesException {
+		//Se configura -1 como valor por defecto en caso de que no obtenga ninguna conexion
+		int indice = -1;
 		try {
-			con.cerrarConexion();
+			indice = addConexion();
+		} catch (ClassNotFoundException e) {
+			throw new PoolConexionesException("No existe la clase que define el dirver en la config");	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PoolConexionesException("Error SQL: " + e.getErrorCode() + " ---" + e.getMessage());
 		}
+		try {
+			if (modificada)
+				miMonitor.comienzoEscritura();
+			else
+				miMonitor.comienzoLectura();
+		} catch (InterruptedException e) {
+			throw new PoolConexionesException("Error bloqueando monitor en metodo obtenerConexion");
+		}
+		if (indice == -1)
+			throw new PoolConexionesException("No hay conexiones disponibles");
+		else
+			return conexiones.get(indice);
+	}
+	
+	//Metodo privado que dada una conexion, la remueve del arreglo, la cierra y la deja en null para el GC
+	private void removeConexion(IConexion con, boolean huboModificaciones) throws SQLException {
+		//Quito el objeto del arreglo
+		conexiones.remove(conexiones.indexOf(con));
+		//Cierro la conexion
+		con.cerrarConexion(huboModificaciones);
 		con = null;
 	}
 	
-	void liberarConexion (IConexion con, boolean huboModificaciones) {
-		
+	public void liberarConexion (IConexion con, boolean huboModificaciones) throws PoolConexionesException  {
+		if(huboModificaciones) {
+			try {
+				miMonitor.terminoEscritura();
+			} catch (InterruptedException e) {
+				throw new PoolConexionesException("Error liberando monitor escritura en metodo liberarConexion");
+			}
+		}else {
+			miMonitor.terminoLectura();
+		}
+		try {
+			removeConexion(con, huboModificaciones);
+		} catch (SQLException e) {
+			throw new PoolConexionesException("Error SQL: " + e.getErrorCode() + " ---" + e.getMessage());
+		}		
 	}
-	
-	
-	
-	//TODO:Ver de corregir 
-	public IConexion obtenerConexiones(boolean modificaDatos) throws ClassNotFoundException, SQLException {
-		Connection resu = (Connection) new Conexion(Connection.TRANSACTION_READ_COMMITTED, driver, url, this.usuario, clave);
-		return (IConexion) resu;
-		/*
-		 * 
-		 * 
-		 */
-	}
-
 }

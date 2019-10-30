@@ -3,9 +3,9 @@ package poolConexiones;
 public interface IPoolConexiones {
 	
 	//Libera la conexion del pool
-	void liberarConexion (IConexion con, boolean huboModificaciones);
+	public void liberarConexion (IConexion con, boolean huboModificaciones) throws PoolConexionesException;
 	
 	//Solcita al pool una nueva conexion
-	IConexion obtenerConexion (boolean modificada);
+	public IConexion obtenerConexion (boolean modificada) throws PoolConexionesException;
 
 }
