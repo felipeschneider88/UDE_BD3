@@ -13,7 +13,7 @@ import com.sun.xml.internal.org.jvnet.mimepull.MIMEConfig;
 public class PoolConexiones implements IPoolConexiones{
 	private int nivelTransaccional;
 	private int tamano;
-	private int creadas;
+	//private int creadas;
 	private int tope;
 	private String driver;
 	private String usuario;
@@ -21,26 +21,33 @@ public class PoolConexiones implements IPoolConexiones{
 	private String url;
 	private ArrayList<IConexion> conexiones;
 	private static PoolConexiones instance;
-	private Monitor miMonitor;
+	//Queremos que sea un unico monitor para todo el Pool
+	private static Monitor miMonitor = new Monitor();
+ 
 
 	
-	public static PoolConexiones getInstance() throws FileNotFoundException, IOException {
+	public static PoolConexiones getInstance() throws PoolConexionesException {
 		if (instance == null) {
 			instance = new PoolConexiones();
 		}
 		return instance;
 	}
 	
-	public PoolConexiones() throws FileNotFoundException, IOException {
+	public PoolConexiones() throws PoolConexionesException {
 		conexiones = new ArrayList<IConexion>();
 		tope = conexiones.size();
-		creadas=0;
-		miMonitor = new Monitor();
+		//creadas=0;
 		
 		Properties p = new Properties();
 		System.out.println("Working Directory = " +
 	              System.getProperty("user.dir"));
-		p.load(new FileInputStream("src/poolConexiones/config.properties"));
+		try {
+			p.load(new FileInputStream("src/poolConexiones/config.properties"));
+		} catch (FileNotFoundException e) {
+			throw new PoolConexionesException("No existe el archivo de configuracion");
+		} catch (IOException e) {
+			throw new PoolConexionesException("Error de IO: " + e.getMessage());
+		}
 		driver = p.getProperty("driver");
 		url = p.getProperty("url");
 		usuario = p.getProperty("usuario");
@@ -48,7 +55,7 @@ public class PoolConexiones implements IPoolConexiones{
 		tamano = new Integer(p.getProperty("tamano"));
 		//TODO: Ver si esto anda o hay que averiguar los valores de Integer
 		nivelTransaccional = new Integer(p.getProperty("nivelTransaccional"));
-		//Connection.TRANSACTION_NONE
+		//Connection.TRANSACTION_NONE 
 		//Connection.TRANSACTION_READ_COMMITTED
 		//Connection.TRANSACTION_READ_UNCOMMITTED
 		//Connection.TRANSACTION_REPEATABLE_READ

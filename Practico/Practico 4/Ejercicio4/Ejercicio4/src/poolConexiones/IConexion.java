@@ -12,4 +12,5 @@ public interface IConexion {
 	//TODO: Hay que manejar correctamente el posible SQLException
 	public void cerrarConexion(boolean huboModificaciones) throws SQLException;
 	
+	
 }
