@@ -58,7 +58,7 @@ public class Consultas {
 	//ES NECESARIO TAMBIEN TENER EL NUMERO DE LA DRAGQUEEN? NO ENTIENDO LA IDEA A LA HORA DE INSERTAR O MODIFICAR DRAGS
 	public String registrarVictoria(){
 		
-		String query = "UPDATE DragQueens SET cantVictorias WHERE nroTemp = ?";
+		String query = "UPDATE DragQueens SET cantVictorias = ? WHERE nroTemp = ?";
 		return query;
 	}
 	
