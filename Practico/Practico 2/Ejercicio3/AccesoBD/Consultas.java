@@ -22,7 +22,7 @@ public class Consultas {
 	
 	public String insertarDragQueen() {
 		
-		String query = "";
+		String query = "INSERT INTO DragQueens (nroTemp, anio, cantCapitulos) VALUES (?,?,?,?)";
 		return query;
 	}
 	
@@ -66,6 +66,11 @@ public class Consultas {
 		String query = "";
 		return query;
 	}
+	
+	Public String obtenerMaxnroPartTemporada() {
+		String query = "SELECT MAX(D.nroPart) FROM Temporadas T, DragQueens D"+
+			"WHERE T.nroTemp = (?) and T.nroTemp = D.nroTemp ";
+		return query;
 	
 	
 }
