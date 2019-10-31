@@ -39,7 +39,8 @@ public class Consultas {
 		
 		String query =  "SELECT D.nroPart, D.nombre, D.cantVictorias FROM DragQueens D" + 
 						"WHERE D.nroTemp = ? " +
-						"ORDER BY nroPart";
+						"ORDER BY nroPart"+
+						"LIMIT 1";
 		return query;
 	}
 	
