@@ -39,8 +39,8 @@ public class Consultas {
 		
 		String query =  "SELECT D.nroPart, D.nombre, D.cantVictorias FROM DragQueens D" + 
 						"WHERE D.nroTemp = ? " +
-						"ORDER BY nroPart"+
-						"LIMIT 1";
+						"ORDER BY nroPart";
+						
 		return query;
 	}
 	
@@ -50,7 +50,9 @@ public class Consultas {
 		String query = "SELECT T.nroTemp, T.anio, T.cantCapitulos, MAX(count(D.nroPart)) as cantParticipantes" +
 					   "FROM Temporadas T, DragQueens D" +
 				       "WHERE T.nroTemp = D.nroTemp" +
-					   "GROUP BY D.nroTemp";
+					   "GROUP BY D.nroTemp"+
+					"ORDER BY T.nroTemp desc" +
+					"LIMIT 1";
 		return query;
 	}
 	
@@ -58,13 +60,17 @@ public class Consultas {
 	//ES NECESARIO TAMBIEN TENER EL NUMERO DE LA DRAGQUEEN? NO ENTIENDO LA IDEA A LA HORA DE INSERTAR O MODIFICAR DRAGS
 	public String registrarVictoria(){
 		
-		String query = "UPDATE DragQueens SET cantVictorias = ? WHERE nroTemp = ?";
+		String query = "UPDATE DragQueens SET cantVictorias = ? WHERE nroTemp = ? and nroPart = ?";
 		return query;
 	}
 	
 	public String obtenerGanadora() {
 		
-		String query = "";
+		String query = "SELECT nroPart, MAX(cantVictorias) as cantVictorias" +
+				   "FROM DragQueens " +
+			         "WHERE nroTemp = ? " +		
+				"ORDER BY nroPart desc" +
+					"LIMIT 1";
 		return query;
 	}
 	
