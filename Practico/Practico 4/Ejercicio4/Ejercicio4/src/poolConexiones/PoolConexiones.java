@@ -19,10 +19,11 @@ public class PoolConexiones implements IPoolConexiones{
 	private String usuario;
 	private String clave;
 	private String url;
+	private boolean autoCommit;
 	private ArrayList<IConexion> conexiones;
 	private static PoolConexiones instance;
 	//Queremos que sea un unico monitor para todo el Pool
-	private static Monitor miMonitor = new Monitor();
+	//private static Monitor miMonitor = new Monitor();
  
 
 	
@@ -53,6 +54,7 @@ public class PoolConexiones implements IPoolConexiones{
 		usuario = p.getProperty("usuario");
 		clave = p.getProperty("clave");
 		tamano = new Integer(p.getProperty("tamano"));
+		autoCommit = new Boolean(p.getProperty("autoCommit"));
 		//TODO: Ver si esto anda o hay que averiguar los valores de Integer
 		nivelTransaccional = new Integer(p.getProperty("nivelTransaccional"));
 		/*
@@ -79,7 +81,7 @@ public class PoolConexiones implements IPoolConexiones{
 		return resu;
 	}
 	
-	public IConexion obtenerConexion (boolean modificada) throws PoolConexionesException {
+	public synchronized  IConexion obtenerConexion (boolean modificada) throws PoolConexionesException {
 		//Se configura -1 como valor por defecto en caso de que no obtenga ninguna conexion
 		int indice = -1;
 		try {
@@ -89,6 +91,7 @@ public class PoolConexiones implements IPoolConexiones{
 		} catch (SQLException e) {
 			throw new PoolConexionesException("Error SQL: " + e.getErrorCode() + " ---" + e.getMessage());
 		}
+		/*
 		try {
 			if (modificada)
 				miMonitor.comienzoEscritura();
@@ -97,6 +100,7 @@ public class PoolConexiones implements IPoolConexiones{
 		} catch (InterruptedException e) {
 			throw new PoolConexionesException("Error bloqueando monitor en metodo obtenerConexion");
 		}
+		*/
 		if (indice == -1)
 			throw new PoolConexionesException("No hay conexiones disponibles");
 		else
@@ -112,7 +116,8 @@ public class PoolConexiones implements IPoolConexiones{
 		con = null;
 	}
 	
-	public void liberarConexion (IConexion con, boolean huboModificaciones) throws PoolConexionesException  {
+	public synchronized void liberarConexion (IConexion con, boolean huboModificaciones) throws PoolConexionesException  {
+		/*
 		if(huboModificaciones) {
 			try {
 				miMonitor.terminoEscritura();
@@ -122,6 +127,7 @@ public class PoolConexiones implements IPoolConexiones{
 		}else {
 			miMonitor.terminoLectura();
 		}
+		*/
 		try {
 			removeConexion(con, huboModificaciones);
 		} catch (SQLException e) {
